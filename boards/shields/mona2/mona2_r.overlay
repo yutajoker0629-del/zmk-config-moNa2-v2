@@ -69,8 +69,14 @@
     status = "okay";
     device = <&trackball_central>;
 
+    // トラボを動かすと MOUSE レイヤー(5) に自動で入り、500ms 止まると戻る（roBa の automouse-layer 相当）
+    input-processors =
+        <&zip_xy_transform INPUT_TRANSFORM_Y_INVERT>,       //Y軸反転（mona2.dtsi の元設定）
+        <&zip_temp_layer 5 500>;                            //オートマウスレイヤーの選択
+
+    // SCROLL レイヤー(6) ではトラボがスクロールになる（roBa の scroll-layers 相当）
     scroller {
-        layers = <3>;
+        layers = <6>;
         input-processors = 
             // <&zip_xy_transform INPUT_TRANSFORM_XY_SWAP>,        //X軸とY軸の入れ替え
             <&zip_xy_transform INPUT_TRANSFORM_X_INVERT>,       //X軸反転
@@ -79,4 +85,10 @@
             <&zip_scroll_scaler 1 5>;                           //スクロール量を1/4倍
     };
 
+};
+
+// オートマウス中にマウスボタン以外のキーを押したら、すぐ MOUSE レイヤーを抜ける
+// （マウスボタンの位置: S D F / J K L / 左親指内側 / 右端親指）
+&zip_temp_layer {
+    excluded-positions = <11 12 13 17 18 19 38 41>;
 };
